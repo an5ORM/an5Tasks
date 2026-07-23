@@ -13,9 +13,10 @@ export const TaskSchema = z.object({
   title: z.string(),
   description: z.string(),
   priority: z.enum(['low', 'medium', 'high']),
-  status: z.enum(['todo', 'in-progress', 'done']),
+  status: z.enum(['todo', 'in-progress', 'reviewed', 'done']),
   file: z.string().optional(),
   createdAt: z.string(),
+  resolvedAt: z.string().optional(),
 });
 
 export type Task = z.infer<typeof TaskSchema>;
@@ -56,7 +57,7 @@ export const listTasksTool = ai.defineTool(
     description: 'List all tasks from the tasks.json file in the workspace.',
     inputSchema: z.object({
       workspaceDir: z.string(),
-      status: z.enum(['todo', 'in-progress', 'done']).optional(),
+      status: z.enum(['todo', 'in-progress', 'reviewed', 'done']).optional(),
       priority: z.enum(['low', 'medium', 'high']).optional(),
     }),
     outputSchema: z.array(TaskSchema),
@@ -80,7 +81,7 @@ export const updateTaskTool = ai.defineTool(
     inputSchema: z.object({
       workspaceDir: z.string(),
       taskId: z.string(),
-      status: z.enum(['todo', 'in-progress', 'done']).optional(),
+      status: z.enum(['todo', 'in-progress', 'reviewed', 'done']).optional(),
       priority: z.enum(['low', 'medium', 'high']).optional(),
     }),
     outputSchema: TaskSchema.nullable(),
@@ -93,7 +94,12 @@ export const updateTaskTool = ai.defineTool(
     const task = tasks.find(t => t.id === input.taskId);
     if (!task) return null;
 
-    if (input.status) task.status = input.status;
+    if (input.status) {
+      task.status = input.status;
+      if ((input.status === 'done' || input.status === 'reviewed') && !task.resolvedAt) {
+        task.resolvedAt = new Date().toISOString();
+      }
+    }
     if (input.priority) task.priority = input.priority;
 
     fs.writeFileSync(tasksFilePath, JSON.stringify(tasks, null, 2));
@@ -259,7 +265,12 @@ export async function updateTask(workspaceDir: string, taskId: string, updates: 
   const task = tasks.find(t => t.id === taskId);
   if (!task) return null;
 
-  if (updates.status) task.status = updates.status as Task['status'];
+  if (updates.status) {
+    task.status = updates.status as Task['status'];
+    if ((task.status === 'done' || task.status === 'reviewed') && !task.resolvedAt) {
+      task.resolvedAt = new Date().toISOString();
+    }
+  }
   if (updates.priority) task.priority = updates.priority as Task['priority'];
 
   fs.writeFileSync(tasksFilePath, JSON.stringify(tasks, null, 2));
