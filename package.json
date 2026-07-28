@@ -1,0 +1,34 @@
+{
+  "name": "an5-tasks",
+  "version": "1.0.0",
+  "description": "Genkit-integrated task manager for database schema issues and LLM review task generation",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/an5ORM/an5Tasks.git"
+  },
+  "keywords": ["an5", "tasks", "genkit", "llm", "code-review"],
+  "files": [
+    "dist/**/*.{js,d.ts}",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "node test/smoke.test.js"
+  },
+  "dependencies": {
+    "genkit": "^1.39.0"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3",
+    "@types/node": "^20.11.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
