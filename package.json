@@ -8,6 +8,8 @@
   "exports": {
     ".": "./dist/index.js"
   },
+  "author": "an5ORM",
+  "homepage": "https://github.com/an5ORM/an5",
   "repository": {
     "type": "git",
     "url": "https://github.com/an5ORM/an5Tasks.git"
