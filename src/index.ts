@@ -289,3 +289,25 @@ export async function deleteTask(workspaceDir: string, taskId: string): Promise<
   fs.writeFileSync(tasksFilePath, JSON.stringify(tasks, null, 2));
   return true;
 }
+
+export async function createTask(workspaceDir: string, data: { title: string; description: string; priority?: 'low' | 'medium' | 'high'; file?: string; status?: 'todo' | 'in-progress' | 'reviewed' | 'done' }): Promise<Task> {
+  const tasksFilePath = path.join(workspaceDir, 'tasks.json');
+  let tasks: Task[] = [];
+  if (fs.existsSync(tasksFilePath)) {
+    try {
+      tasks = JSON.parse(fs.readFileSync(tasksFilePath, 'utf8'));
+    } catch {}
+  }
+  const newTask: Task = {
+    id: `TASK-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+    title: data.title,
+    description: data.description,
+    priority: data.priority || 'medium',
+    status: data.status || 'todo',
+    file: data.file,
+    createdAt: new Date().toISOString(),
+  };
+  tasks.unshift(newTask);
+  fs.writeFileSync(tasksFilePath, JSON.stringify(tasks, null, 2));
+  return newTask;
+}
