@@ -150,8 +150,8 @@ export const parseReviewToTasksFlow = ai.defineFlow(
                          trimmed.match(/^-\s*\[\s*\]\s*(.*)$/);
 
       if (issueMatch) {
-        const type = (issueMatch[1] || 'ISSUE') as string;
-        const description = issueMatch[2] || issueMatch[1];
+        const type = (issueMatch[1] ?? 'ISSUE') as string;
+        const description = issueMatch[2] ?? issueMatch[1] ?? '';
 
         let priority: 'low' | 'medium' | 'high' = 'medium';
         if (type.toUpperCase() === 'BUG' || type.toUpperCase() === 'WARNING') priority = 'high';
