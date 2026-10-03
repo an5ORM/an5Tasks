@@ -14,7 +14,13 @@
     "type": "git",
     "url": "https://github.com/an5ORM/an5Tasks.git"
   },
-  "keywords": ["an5", "tasks", "genkit", "llm", "code-review"],
+  "keywords": [
+    "an5",
+    "tasks",
+    "genkit",
+    "llm",
+    "code-review"
+  ],
   "files": [
     "dist/**/*.{js,d.ts}",
     "README.md"
@@ -22,10 +28,10 @@
   "scripts": {
     "build": "tsc",
     "pretest": "npm run build",
-    "test": "node test/smoke.test.js"
+    "test": "node test/smoke.test.js && node --test test/runtime.test.js"
   },
   "dependencies": {
-    "genkit": "^1.39.0"
+    "genkit": "^1.42.0"
   },
   "devDependencies": {
     "typescript": "^7.0.2",
